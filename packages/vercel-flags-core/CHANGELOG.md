@@ -1,5 +1,11 @@
 # @vercel/flags-core
 
+## 1.1.0
+
+### Minor Changes
+
+- 823bf78: Add CJS support
+
 ## 1.0.1
 
 ### Patch Changes
