@@ -16,7 +16,6 @@ export interface Output {
 export type PrepareFlagsDefinitionsResult =
   | { created: false; reason: 'no-sdk-keys' }
   | { created: true; sdkKeysCount: number };
-
 /**
  * Obfuscates SDK key for logging (shows first 18 chars)
  */
@@ -82,7 +81,6 @@ export function generateDefinitionsModule(
   // Add definition constants
   for (let i = 0; i < uniqueStrings.length; i++) {
     lines.push(
-      `const _d${i} = memo(() => JSON.parse(${JSON.stringify(uniqueStrings[i])}));`,
     );
   }
 
