@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // The readBundledDefinitions function uses dynamic import which is hard to mock.
-// Instead, we test the behavior indirectly through the FlagNetworkDataSource
+// Instead, we test the behavior indirectly through the Controller
 // which already mocks readBundledDefinitions.
 // Here we just test the function interface and basic behavior.
 
@@ -48,8 +48,23 @@ describe('readBundledDefinitions', () => {
     expect(result.definitions).toBeNull();
   });
 
+  it('should return missing-file when the bundled definitions module has no get export', async () => {
+    vi.doMock('@vercel/flags-definitions', () => ({ get: undefined }));
+
+    const { readBundledDefinitions } = await import(
+      './read-bundled-definitions'
+    );
+
+    const result = await readBundledDefinitions('nonexistent-id');
+
+    expect(result).toEqual({
+      definitions: null,
+      state: 'missing-file',
+    });
+  });
+
   // The detailed behavior of readBundledDefinitions is tested indirectly
-  // through FlagNetworkDataSource tests which mock readBundledDefinitions.
+  // through Controller tests which mock readBundledDefinitions.
   // Those tests cover:
   // - 'ok' state with bundled definitions
   // - 'missing-file' state

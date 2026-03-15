@@ -2,52 +2,57 @@
  * Factory functions for exports of index.default.ts and index.next-js.ts
  */
 
+import { Controller, type ControllerOptions } from './controller';
 import type { createCreateRawClient } from './create-raw-client';
-import {
-  FlagNetworkDataSource,
-  type FlagNetworkDataSourceOptions,
-} from './data-source/flag-network-data-source';
 import type { FlagsClient } from './types';
 import { parseSdkKeyFromFlagsConnectionString } from './utils/sdk-keys';
 
 /**
  * Options for createClient
  */
-export type CreateClientOptions = Omit<FlagNetworkDataSourceOptions, 'sdkKey'>;
+export type CreateClientOptions = Omit<ControllerOptions, 'sdkKey'>;
 
 export function make(
   createRawClient: ReturnType<typeof createCreateRawClient>,
 ): {
   flagsClient: FlagsClient;
   resetDefaultFlagsClient: () => void;
-  createClient: (
+  createClient: <Entities = Record<string, unknown>>(
     sdkKeyOrConnectionString: string,
     options?: CreateClientOptions,
-  ) => FlagsClient;
+  ) => FlagsClient<Entities>;
 } {
   let _defaultFlagsClient: FlagsClient | null = null;
 
   // Insights
   // - data source must specify the environment & projectId as sdkKey has that info
   // - "reuse" functionality relies on the data source having the data for all envs
-  function createClient(
+  function createClient<Entities = Record<string, unknown>>(
     sdkKeyOrConnectionString: string,
     options?: CreateClientOptions,
-  ): FlagsClient {
-    if (!sdkKeyOrConnectionString) throw new Error('flags: Missing sdkKey');
+  ): FlagsClient<Entities> {
+    if (!sdkKeyOrConnectionString)
+      throw new Error('@vercel/flags-core: Missing sdkKey');
+
+    if (typeof sdkKeyOrConnectionString !== 'string')
+      throw new Error(
+        `@vercel/flags-core: Invalid sdkKey. Expected string, got ${typeof sdkKeyOrConnectionString}`,
+      );
 
     // Parse connection string if needed (e.g., "flags:edgeConfigId=...&sdkKey=vf_xxx")
     const sdkKey = parseSdkKeyFromFlagsConnectionString(
       sdkKeyOrConnectionString,
     );
     if (!sdkKey) {
-      throw new Error('flags: Missing sdkKey in connection string');
+      throw new Error(
+        '@vercel/flags-core: Missing sdkKey in connection string',
+      );
     }
 
     // sdk key contains the environment
-    const dataSource = new FlagNetworkDataSource({ sdkKey, ...options });
-    return createRawClient({
-      dataSource,
+    const controller = new Controller({ sdkKey, ...options });
+    return createRawClient<Entities>({
+      controller,
       origin: { provider: 'vercel', sdkKey },
     });
   }
@@ -65,7 +70,7 @@ export function make(
 
         const sdkKey = parseSdkKeyFromFlagsConnectionString(process.env.FLAGS);
         if (!sdkKey) {
-          throw new Error('flags: Missing sdkKey');
+          throw new Error('@vercel/flags-core: Missing sdkKey');
         }
         _defaultFlagsClient = createClient(sdkKey);
       }
