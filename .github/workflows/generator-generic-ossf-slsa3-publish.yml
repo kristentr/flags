@@ -17,9 +17,7 @@ on:
     types: [created]
 
 jobs:
-  build:
-    permissions:
-      contents: read
+  build:vercel:main
     runs-on: ubuntu-latest
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
