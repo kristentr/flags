@@ -17,7 +17,7 @@ on:
     types: [created]
 
 jobs:
-  build:
+  build:vercel:main
     runs-on: ubuntu-latest
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
