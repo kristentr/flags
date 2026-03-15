@@ -16,29 +16,6 @@ export interface Output {
 export type PrepareFlagsDefinitionsResult =
   | { created: false; reason: 'no-sdk-keys' }
   | { created: true; sdkKeysCount: number };
-
-const charMap: Record<string, string> = {
-  '<': '\\u003C',
-  '>': '\\u003E',
-  '/': '\\u002F',
-  '\\': '\\\\',
-  '\b': '\\b',
-  '\f': '\\f',
-  '\n': '\\n',
-  '\r': '\\r',
-  '\t': '\\t',
-  '\0': '\\0',
-  '\u2028': '\\u2028',
-  '\u2029': '\\u2029',
-};
-
-function escapeUnsafeChars(str: string): string {
-  return str.replace(
-    /[<>/\\\b\f\n\r\t\0\u2028\u2029]/g,
-    (ch) => charMap[ch] ?? ch,
-  );
-}
-
 /**
  * Obfuscates SDK key for logging (shows first 18 chars)
  */
@@ -104,7 +81,6 @@ export function generateDefinitionsModule(
   // Add definition constants
   for (let i = 0; i < uniqueStrings.length; i++) {
     lines.push(
-      `const _d${i} = memo(() => JSON.parse(${escapeUnsafeChars(JSON.stringify(uniqueStrings[i]))}));`,
     );
   }
 
