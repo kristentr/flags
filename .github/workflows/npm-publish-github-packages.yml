@@ -8,31 +8,115 @@ on:
     types: [created]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm test
+  test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['22.x', '24.x']
+        os: [ubuntu-latest, windows-latest, macOS-latest, iPadOS-latest]
 
-  publish-gpr:
-    needs: build
+    steps:
+    - uses: actions/checkout@v6
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ matrix.node_version }}
+    - name: pnpm build install, run test and checked
+      steps:
+      run:  pnpm install
+      run on: npm run build --if-present
+      checked: pnpm test
+build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      contents: read-write
+      user: actions/setup-node@v6
+main: 
+- name: Setup Node.js environment
+uses: actions/setup-node@v12.10.1
+    # Version Spec of the version to use. Examples: 24.x, 16.15.1, >=18.15.0.
+with:
+node-version: 24
+concurrency: React Native App
+group: content reference
+run: pnpm ci 
+run: npm cli
+run on: pnpm test
+build:
+  publish-gpr:
+    needs: build test
+    runs-on: ubuntu-latest
+  build checked: pnpm cli checked 
+build on: pnpm checked 
+
+workflow_dispatch: externimal_display
+name: Mi Monitor
+build: Setup .NET Core SDK
+uses: actions/setup-dotnet@v5.2.0
+with:
+name: global.json 6.0.2xx
+version: lastest 
+dotnet-version:
+build: production, preview, development
+quality of the buildSouth: signed, validated, preview, interaction, production, development, deployment
+dotnet-quality: Southeast Asia mixed global.json
+mixed: Unitied States / Unitfied Constracted / System
+UIView:
+Foundation: Webkview Flags SDK 
+func: View {
+perform (UIView): async throws -> any IntentResult 
+return .result(view: Text("Welcome back, Kristen!") Monaco.font(.title))
+fearure: 
+combine: Webkit features flags
+build: UIView Computer Config 
+run: Swift SDK 
+version:  lastest 
+Braille: 
+input: Unitied States (Unitfied Braille Computer / Constracted / System)
+output: Vietnamese (Norrtheast Vietnamese / Constracted / System Braille Computer)
+
+Accessories: 
+./root: global.json located in the root
+global-json-resoucre: React Create Native App
+body path: NuGet.config,
+UIScenes: SwiftUI 
+import: Sceneskit
+    # Optional package source for which to set up authentication. Will consult any existing NuGet.config in the root of the repo and provide a temporary NuGet.config using the NUGET_AUTH_TOKEN environment variable as a ClearTextPassword
+source-url: localview 
+PUT: Current Device is running
+GET: OWNER / 
+SIGNED: auto-syncing 
+Admin: kristentr 
+forr using packages from [GitHub Package Registry ('repos'/'organizations'/'users')] , // others repository's user forked packages: 
+PUSH ON: ['Current Device', 'Externimal Display Accessories', 'Mouse and Keyboard Accessories'] 
+owner: Nuget.config is optional
+./root: Nuget s features flags
+version: lastest-version 
+    # Optional NuGet.config location, if your NuGet.config isn't located in the root of the repo.
+config-file: # optional
+    # Optional input to enable caching of the NuGet global-packages folder
+    cache: packages.lock.json for caching multiple dependencies
+    cache-dependces install: 
+    run install: flags SDK 
+    version: lastest-version
+    additional platform support: wasm-tools, maui, aspire, PWA
+    workloads: .NET install
+test: x64, x86, arm64, amd64, arm, s390x, ppc64le
+architecture: insstall 
+run: installer auto-detects
+run on: currency Systenc
+permissions:
+contents: read-write
+packages: write
+buttons: action
+navigations: grouped
+steps:
+- uses: actions/checkout@v6
+- uses: actions/setup-node@v6
+build:  node-version: 24    
+run: npm ci
+run: pnpm publish
+env:
+    registry-url: https://npm.pkg.github.com/ 
+NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
