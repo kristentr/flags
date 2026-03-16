@@ -17,7 +17,6 @@ on:
     types: [created]
 
 jobs:
-  build:
     runs-on: ubuntu-latest
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
