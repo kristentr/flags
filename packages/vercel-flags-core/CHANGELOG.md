@@ -1,5 +1,35 @@
 # @vercel/flags-core
 
+## 1.2.0
+
+### Minor Changes
+
+- 4ec9ecd: Support object/JSON flag values in addition to boolean, string, and number
+- 64619d7: Allow specifying entities type when creating clients
+
+  You can now create clients while specifying the entities type:
+
+  ```ts
+  type Entities = { user: { id: string; name?: string } };
+  const client = createClient<Entities>("");
+  client.evaluate("flagKey", undefined, { user: { id: "" } }); // uses Entities type for context
+  ```
+
+  You can still narrow the entities type when evaluating flags:
+
+  ```ts
+  client.evaluate<{ user: { id: string; name: string } }>(
+    "flagKey",
+    false,
+    { user: { id: "", name: "" } } // uses custom entities type
+  );
+  ```
+
+### Patch Changes
+
+- c48dce9: [react-native] shim store (AsyncLocalStorage)
+- 4a5f56a: Skip sending config read events for dev and custom backends
+
 ## 1.1.1
 
 ### Patch Changes
